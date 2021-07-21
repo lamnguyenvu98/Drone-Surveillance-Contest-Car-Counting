@@ -17,8 +17,8 @@ In detection part:
 In tracking part:
 - I used CentroidTracker (euclidean distance based) to track object and give them ID number. 
 - In order to count car, I draw a horizontal line in the footage to visualize if cars are above this line then count them. 
-- I create a dictionary (key is ID of object and value is a boolean datatype) - to specify if object ID above this line then set it as counted so I don't have to count them again.
-- To archieve faster processing, I used correlation tracker in dlib to track object and run yolo detection after 30 frames (because object detection models always cost a lot of computational resources.
+- I create a dictionary (key is ID of object and value is a boolean datatype) - to specify if object ID above this line then set it as counted (True) so I don't have to count them again.
+- To archieve faster processing, I used correlation tracker in dlib to track object and run yolo detection in every 30 frames (because object detection models always cost a lot of computational resources so I skipped the detection part for 30 frames then run detection again).
 
 The idea of tracking part was from Adrian Roseborg and his amazing blog: https://www.pyimagesearch.com/2018/08/13/opencv-people-counter/
 

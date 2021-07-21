@@ -7,7 +7,7 @@ In detection part:
 - I trained YOLOv4 model to detect cars. I wrote a small script to write each frame in the footage to dataset folder.
 - I created 2 subfolders in dataset folder named as train and valid.
 - I took 10% of images to valid folder and the rest was placed in train folder.
-- I used labelImg to label all images both train folder and valid folder.
+- I used labelImg to label all images in both train folder and valid folder.
 - I wrote simple notebook file to train yolov4 on google colab and train my model.
 - The yolov4 returned class_id, bounding box coordinate (center_x, center_y, width, height) and confidence score.
 

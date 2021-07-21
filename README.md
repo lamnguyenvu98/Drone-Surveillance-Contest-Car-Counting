@@ -1,4 +1,4 @@
-# Drone-Surveillance-Contest
+# Drone-Surveillance-Contest: Car Counting
 
 In order to count number of cars in the footage, I need to go through 2 parts in a pipeline: Detect cars then track them and give each one of them specific ID
 

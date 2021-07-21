@@ -1,0 +1,5 @@
+dlib==19.22.0
+numpy==1.20.3
+opencv_python==4.5.3.56
+scipy==1.6.1
+imutils==0.5.4

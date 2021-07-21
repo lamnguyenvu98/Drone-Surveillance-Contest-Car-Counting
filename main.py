@@ -32,7 +32,6 @@ if shape % 32 != 0:
     sys.exit(1)
 colors = []
 colors.append([(randint(0, 255), randint(0, 255), randint(0, 255)) for i in range(1000)])
-#detected_classes = ['car', 'bus', 'truck', 'train']
 ct = CentroidTracker(maxDisappeared=20, maxDistance=50)
 pts = [deque(maxlen=10) for _ in range(1000)]
 counter = 0

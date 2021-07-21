@@ -4,14 +4,32 @@ from utils.centroidTracker import CentroidTracker
 from utils.trackableobject import TrackableObject
 from random import randint
 from collections import deque
-import dlib, time
+import dlib
 from utils.yolo import *
 import argparse
+import sys
 
-classes = [c.strip() for c in open('models/car.names').readlines()]
-conf_threshold = 0.6  # lay confidence > 0.5
-nmsThreshold = 0.4  # > 0.5 se ap dung Non-max Surpression
-shape = 416
+ap = argparse.ArgumentParser()
+ap.add_argument("-s", "--shape", default=416, type=int, help="input shape of detection model (should be divisible by 32)")
+ap.add_argument("-o", "--output", type=str, help="path to write result")
+ap.add_argument("-m", "--disappeared", default=20, type=int, help="Provide number of frame to delete ID of object if they don't comeback")
+ap.add_argument("-d", "--distance", default=50, type=int, help="threshold number if distance below this value, assign new ID to object")
+ap.add_argument("-f", "--frame", default=20, type=int, help="number of frame to skip")
+ap.add_argument("-c", "--confidence", default=0.6, type=float, help="confidence threshold of detection model")
+ap.add_argument("-nms", "--nonmax", default=0.4, type=float, help="non-max surpression threshold of detection model")
+ap.add_argument("-l", "--class", default="models/car.names", type=str, help="path to class label file")
+ap.add_argument("-w", "--weight", default="models/yolov4_training_last.weights", type=str, help="path to weight file")
+ap.add_argument("-g", "--cfg", default="models/yolov4_testing.cfg", type=str, help="path to config file")
+ap.add_argument("-v", "--video", default="car.mp4", type=str, help="path of processing video")
+args = vars(ap.parse_args())
+
+classes = [c.strip() for c in open(args["class"]).readlines()]
+conf_threshold = args["confidence"]
+nmsThreshold =args["nonmax"] 
+shape = args["shape"]
+if shape % 32 != 0:
+    print("[ERROR] Shape value should be divisible by 32")
+    sys.exit(1)
 colors = []
 colors.append([(randint(0, 255), randint(0, 255), randint(0, 255)) for i in range(1000)])
 #detected_classes = ['car', 'bus', 'truck', 'train']
@@ -24,10 +42,11 @@ empty = []
 trackableObjects = {}
 totalFrames = 0
 totalCar = 0
-(W, H) = (None, None)
-net = yolo_net("models/yolov4_training_last.weights", "models/yolov4_testing.cfg")
-out = cv2.VideoWriter('result/car_count2.avi', cv2.VideoWriter_fourcc(*'XVID'), 25, (1920, 1080))
-vid = cv2.VideoCapture("car.mp4")
+net = yolo_net(args["weight"], args["cfg"])
+out = None
+if args["output"] is not None and out is None:
+    out = cv2.VideoWriter(args["output"], cv2.VideoWriter_fourcc(*'XVID'), 25, (1920, 1080), True)
+vid = cv2.VideoCapture(args["video"])
 while True:
     _, img = vid.read()
     h_img, w_img = img.shape[:2]
@@ -39,7 +58,7 @@ while True:
     rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     status = "Waiting"
     rects = []
-    if totalFrames % 15 == 0:
+    if totalFrames % args["frame"] == 0:
         status = "Detecting"
         trackers = []
         outputs = yolo_output(net, img, shape)
@@ -47,7 +66,6 @@ while True:
         indices = cv2.dnn.NMSBoxes(bbox, confs, conf_threshold, nmsThreshold)
         for i in indices:
             i = i[0]
-            #if classes[classIds[i]] not in detected_classes: continue
             box = bbox[i]
             color = colors[0][i]
             x, y, w, h = box[0], box[1], box[2], box[3]
@@ -104,11 +122,13 @@ while True:
     result = np.vstack((title, img))
     cv2.imshow('Result', result)
     result = cv2.resize(result, (1920, 1080))
-    out.write(result)
+    if out is not None:
+        out.write(result)
     key = cv2.waitKey(1)
-    if key == ord('q'): break
+    if key == 27: break
     totalFrames += 1
 
 vid.release()
-out.release()
+if out is not None:
+    out.release()
 cv2.destroyAllWindows()

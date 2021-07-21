@@ -11,6 +11,9 @@ In detection part:
 - I wrote simple notebook file to train yolov4 on google colab and train my model.
 - The yolov4 returned class_id, bounding box coordinate (center_x, center_y, width, height) and confidence score.
 
+*Link to download weights*: https://drive.google.com/file/d/18EYLqz8ZHlxu3DUkqqqmBGXAHDN2uc7h/view?usp=sharing
+*Place it in models folder*
+
 In tracking part:
 - I used CentroidTracker (euclidean distance based) to track object and give them ID number. 
 - In order to count car, I draw a horizontal line in the footage to visualize if cars are above this line then count them. 

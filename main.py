@@ -86,8 +86,13 @@ while True:
             rects.append((startX, startY, endX, endY))
     
     obj = ct.update(rects)
-    for (objectID, centroid) in obj.items():
+    for (objectID, bbox) in obj.items():
         to = trackableObjects.get(objectID, None)
+        x1, y1, x2, y2 = bbox
+        x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+
+        centroid = (int((x2 - x1) / 2), int((y2 - y1) / 2))
+
         if to is None:
             to = TrackableObject(objectID, centroid)
         else:
@@ -104,15 +109,16 @@ while True:
 
         text = "ID {}".format(objectID)
         colorID = colors[0][objectID]
-        cv2.circle(img, (centroid[0], centroid[1]), 4, colorID, -1)
-        cv2.putText(img, text, (centroid[0] - 10, centroid[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-        center = (centroid[0], centroid[1])
-        pts[objectID].append(center)
-        for i in range(1, len(pts[objectID])):
-            if pts[objectID][i - 1] is None or pts[objectID][i] is None:
-                continue
-            thickness = int(np.sqrt(10 / float(i + 1)) * 2.5)
-            cv2.line(img, pts[objectID][i - 1], pts[objectID][i], colorID, thickness)
+        #cv2.circle(img, (centroid[0], centroid[1]), 4, colorID, -1)
+        cv2.rectangle(img, (x1, y1), (x2, y2), colorID, 2)
+        cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, colorID, 2)
+        # center = (centroid[0], centroid[1])
+        # pts[objectID].append(center)
+        # for i in range(1, len(pts[objectID])):
+        #     if pts[objectID][i - 1] is None or pts[objectID][i] is None:
+        #         continue
+        #     thickness = int(np.sqrt(10 / float(i + 1)) * 2.5)
+        #     cv2.line(img, pts[objectID][i - 1], pts[objectID][i], colorID, thickness)
 
     cv2.putText(title, "Vu Lam Nguyen", (688, 75), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 0, 255), 2)
     cv2.putText(title, f"{totalCar}", (1336, 75), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 0, 255), 2)

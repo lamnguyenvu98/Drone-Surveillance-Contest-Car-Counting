@@ -111,17 +111,9 @@ while True:
         colorID = colors[0][objectID]
         bbox_thick = int(0.6 * (h_img + w_img) / 100)
         t_size = cv2.getTextSize(text, 0, 0.5, thickness=bbox_thick // 2)[0]
-        #cv2.circle(img, (centroid[0], centroid[1]), 4, colorID, -1)
         cv2.rectangle(img, (x1, y1), (x2, y2), colorID, 3)
         cv2.rectangle(img, (x1,y2), (x1 + t_size[0]+7, y2 - t_size[1] - 5), colorID, -1) #filled
         cv2.putText(img, text, (x1+2, y2 - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1)
-        # center = (centroid[0], centroid[1])
-        # pts[objectID].append(center)
-        # for i in range(1, len(pts[objectID])):
-        #     if pts[objectID][i - 1] is None or pts[objectID][i] is None:
-        #         continue
-        #     thickness = int(np.sqrt(10 / float(i + 1)) * 2.5)
-        #     cv2.line(img, pts[objectID][i - 1], pts[objectID][i], colorID, thickness)
 
     cv2.putText(title, "Vu Lam Nguyen", (688, 75), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 0, 255), 2)
     cv2.putText(title, f"{totalCar}", (1336, 75), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 0, 255), 2)

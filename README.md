@@ -7,4 +7,4 @@
 - The Centroid Tracker algorithm mostly depends on running object detection on every frame, which cost a lot of computational resources. Correlation Tracker was used to keep ID of each car and their bounding box coordinate while object detection wasn't running, so overall the program run slightly faster. In my program, only every 20 frames will I run my Yolov4 for object detection. During that every 20-frame period, I use correlation tracker to track objects.
 
 *Link to download weights*: https://drive.google.com/file/d/18EYLqz8ZHlxu3DUkqqqmBGXAHDN2uc7h/view?usp=sharing
-*Place it in models folder*
+*Place it in **models** folder*
